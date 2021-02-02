@@ -1,15 +1,38 @@
-## Put comments here that give an overall description of what your
-## functions do
+## modified by: YT @ 20200201
+##R version: 4.0.3; OS: darwin17.0
 
-## Write a short comment describing this function
-
+## first function establish the access channel to matrix, 
+##and a holder for value "overhead management"
 makeCacheMatrix <- function(x = matrix()) {
-
+  inver <- NULL
+  ## init end
+  
+  set <- function(m){
+    x <<- m
+    inver <<- NULL
+  }
+  get <- function() x
+  setinver <- function(invers) inver <<- invers
+  getinver <- function() inver
+  ## setter & getter end
+  
+  ##result output
+  list(set = set, get = get, setinver = setinver, getinver = getinver)
 }
 
 
-## Write a short comment describing this function
-
+## the functionality block that actually do the calculation
+## produce result and issue result caching
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  ## access
+  inver <- x$getinver()
+  if(!is.null(inver)){
+    message("Retrieving cached result")
+    return(inver)
+  }
+  mat <- x$get()
+  inver <- solve(mat,...)
+  x$setinver(inver)
+  ##result
+  inver
 }
